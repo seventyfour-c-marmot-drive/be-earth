@@ -3,7 +3,7 @@
 	<head>
 		
 		<meta charset="utf-8">
-		<title>My first three.js app</title>
+		<title>earthmap app</title>
 		<style>
 			body { margin: 0; }
 		</style>
@@ -20,6 +20,61 @@
 	</head>
 	<body>
 		<canvas class="webgl"></canvas>
-		<script type="module" src="./main.js"></script>
+		<!-- <script type="module" src="./main.js"></script> -->
+		<script type="module" src="./cities.js"></script>
+		<script id="vertexShader" type="x-shader/x-vertex">
+
+                        precision mediump float;
+                        precision mediump int;
+
+                        uniform mat4 modelViewMatrix;
+                        uniform mat4 projectionMatrix;
+
+                        attribute vec3 position;
+                        attribute vec4 color;
+
+
+                        varying vec3 vPosition;
+
+                        void main()     {
+
+                                vPosition = position;
+
+
+                                gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+                        }
+                </script>
+
+                <script id="fragmentShader" type="x-shader/x-fragment">
+                        precision mediump float;
+                        precision mediump int;
+
+                        uniform float time;
+
+                        varying vec3 vPosition;
+
+                        void main()     {
+
+
+                                    float border = 0.2;
+                                    float radius = 0.5;
+                                    vec4 color0 = vec4(0.0, 0.0, 0.0, 0.0);
+                                    vec4 color1 = vec4(1.0, 1.0, 1.0, 1.0);
+
+                                    vec2 m = vPosition.xy;
+                                    float dist = radius - sqrt(m.x * m.x + m.y * m.y);
+
+                                    float t = 0.0;
+                                    if (dist > border)
+                                      t = 1.0;
+                                    else if (dist > 0.0)
+                                      t = dist / border;
+
+                                    gl_FragColor = mix(color0, color1, t);
+                        }
+                </script>
+
+
+
 	</body>
 </html>

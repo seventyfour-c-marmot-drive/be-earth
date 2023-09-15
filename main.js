@@ -37,7 +37,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 // earth geometry
 const earthGeometry = new THREE.SphereGeometry(10, 128, 128);
 
-const earthTexture = new THREE.TextureLoader().load('public/texture/4kice.jpg' );
+const earthTexture = new THREE.TextureLoader().load('public/texture/8k_earth_daymap.jpg' );
 const beBop = new THREE.TextureLoader().load('public/texture/4kbump.jpg' );
 // earth material
 const earthMaterial = new THREE.MeshPhongMaterial({
@@ -102,7 +102,7 @@ window.addEventListener('resize', () => {
 // spinning animation
 const animate = () => {
     requestAnimationFrame(animate);
-    starMesh.rotation.y -= 0.0003;
+    starMesh.rotation.y -= 0.00005;
     earthMesh.rotation.y -= 0.00022;
     cloudMesh.rotation.y -= 0.00021;
     controls.update();
