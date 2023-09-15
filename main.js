@@ -18,7 +18,7 @@ const near = 0.1;
 const far = 1000;
 
 camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-camera.position.z = 52;
+camera.position.z = 30;
 scene.add(camera);
 
 // renderer setup
@@ -51,7 +51,7 @@ scene.add(earthMesh);
 
 
 // cloud Geometry
-const cloudGeometry = new THREE.SphereGeometry(10.15, 128, 128);
+const cloudGeometry = new THREE.SphereGeometry(10.01, 128, 128);
 
 const cloudTexture = new THREE.TextureLoader().load('public/texture/earthCloud.png');
 
@@ -67,7 +67,7 @@ scene.add(cloudMesh);
 
 
 // galaxy geometry
-const starGeometry = new THREE.SphereGeometry(80, 64, 64);
+const starGeometry = new THREE.SphereGeometry(400, 128, 128);
 
 const galaxyTexture = new THREE.TextureLoader().load('public/texture/galaxy.png')
 
@@ -82,11 +82,11 @@ const starMesh = new THREE.Mesh(starGeometry, starMaterial);
 scene.add(starMesh);
 
 // ambient light
-const ambientlight = new THREE.AmbientLight(0xedd59e, 0.25);
+const ambientlight = new THREE.AmbientLight(0xedd59e, 0.15);
 scene.add(ambientlight);
 
-const pointLight = new THREE.PointLight( 0xedd59e, 1000, 1000 );
-pointLight.position.set( 10, 10, 10 );
+const pointLight = new THREE.PointLight( 0xedd59e, 50000, 1000 );
+pointLight.position.set( 49, 49, 49 );
 scene.add( pointLight );
 
 const sphereSize = 1;
@@ -104,6 +104,7 @@ const animate = () => {
     requestAnimationFrame(animate);
     starMesh.rotation.y -= 0.0003;
     earthMesh.rotation.y -= 0.00022;
+    cloudMesh.rotation.y -= 0.00021;
     controls.update();
     render();
 };
