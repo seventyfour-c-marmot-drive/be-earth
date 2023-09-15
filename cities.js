@@ -34,7 +34,7 @@ let scene = new THREE.Scene();
 
 let group = new THREE.Group();
 scene.add(group);
-camera.position.set(0, -100, 10);
+camera.position.set(0, 0, 100);
 camera.lookAt(10, 20, 30);
 var controls = new OrbitControls(camera, renderer.domElement);
 
@@ -123,7 +123,7 @@ group.add( pointLight );
 
 
 
-let R = 26;
+let R = 25.5;
 let planes = [];
 
 points.forEach(p => {
