@@ -15,7 +15,10 @@ let renderer = new THREE.WebGLRenderer({
   alpha: true
 });
 
-// coordinates 37.773972, -122.431297
+
+let rotationStepG = 0.0008;
+let rotationStepE = 0.0004;
+
 
 let points = [
   {
@@ -27,6 +30,11 @@ let points = [
     title: 'Barcelona',
     lat: 41.390205,
     long: 2.154007
+  },
+  {
+    title: 'Cape Town',
+    lat: -33.918861,
+    long: 18.423300
   }
 ]
 
@@ -176,6 +184,8 @@ points.forEach(p => {
 
             camera.position.set(4 * plane.position.x, 4 * plane.position.y, 4 * plane.position.z);
             camera.lookAt(plane.position.x, plane.position.y, plane.position.z);
+            rotationStepE = 0;
+            rotationStepG = 0.0004;
 
           } );
 
@@ -193,8 +203,8 @@ let time = 0;
 function Render() {
   time++;
 
-  group.rotation.y =  time/1000;
-  group2.rotation.y = time/1000;
+  group.rotation.y -= rotationStepE;
+  group2.rotation.y -= rotationStepG;
 
   planes.forEach(e => {
   	let conj = new THREE.Quaternion();
