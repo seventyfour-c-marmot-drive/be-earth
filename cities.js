@@ -199,10 +199,15 @@ points.forEach(p => {
 
 });
 
-let time = 0;
-function Render() {
-  time++;
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    render();
+}, false);
 
+function Render() {
+  
   group.rotation.y -= rotationStepE;
   group2.rotation.y -= rotationStepG;
 
