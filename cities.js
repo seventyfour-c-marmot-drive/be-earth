@@ -149,11 +149,10 @@ let bcontain = document.getElementById('bcontainer');
 points.forEach(p => {
   i++;
   let pos = calcPosFromLatLonRad(p.lat,p.long,R);
-  let geometry = new THREE.PlaneGeometry( 1,1 );
+  let geometry = new THREE.SphereGeometry( 0.4,16,16 );
   let material = new THREE.MeshBasicMaterial( {
 	  color: 0x00ff00,
 	  side: THREE.DoubleSide,
-
 	  // wireframe: true
   } );
   let material1 = new THREE.RawShaderMaterial( {
