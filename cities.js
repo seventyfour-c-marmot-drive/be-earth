@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 // import { OrbitControls } from '/jsm/controls/OrbitControls.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 
 
 
@@ -18,9 +19,14 @@ let renderer = new THREE.WebGLRenderer({
 
 let points = [
   {
-  	title: 'San Fran',
+  	title: 'San Francisco',
   	lat: 37.773972,
   	long: -122.43129
+  },
+  {
+    title: 'Barcelona',
+    lat: 41.390205,
+    long: 2.154007
   }
 ]
 
@@ -33,7 +39,11 @@ var camera = new THREE.PerspectiveCamera(40, width / height, 1, 1000);
 let scene = new THREE.Scene();
 
 let group = new THREE.Group();
+let group2 = new THREE.Group();
+
+
 scene.add(group);
+scene.add(group2);
 camera.position.set(0, 0, 100);
 camera.lookAt(10, 20, 30);
 var controls = new OrbitControls(camera, renderer.domElement);
@@ -111,23 +121,25 @@ const starMaterial = new THREE.MeshBasicMaterial({
 
 // galaxy mesh
 const starMesh = new THREE.Mesh(starGeometry, starMaterial);
-group.add(starMesh);
+group2.add(starMesh);
 
 // ambient light
 const ambientlight = new THREE.AmbientLight(0xedd59e, 0.15);
-group.add(ambientlight);
+group2.add(ambientlight);
 
-const pointLight = new THREE.PointLight( 0xedd59e, 125000, 1000 );
-pointLight.position.set( 125, 125, 125 );
-group.add( pointLight );
+const pointLight = new THREE.PointLight( 0xedd59e, 250000, 1000 );
+pointLight.position.set( 200, 200, 200 );
+group2.add( pointLight );
 
 
 
 let R = 25.5;
 let planes = [];
+let i = 0;
+let bcontain = document.getElementById('bcontainer');
 
 points.forEach(p => {
-
+  i++;
   let pos = calcPosFromLatLonRad(p.lat,p.long,R);
   let geometry = new THREE.PlaneGeometry( 1,1 );
   let material = new THREE.MeshBasicMaterial( {
@@ -147,28 +159,47 @@ points.forEach(p => {
   } );
   let plane = new THREE.Mesh(geometry,material1);
 
-
-
-
   plane.position.x = pos[0];
   plane.position.y = pos[1];
   plane.position.z = pos[2];
 
 
+          const element = document.createElement( 'div' );
+          element.className = 'place';
+          element.style.backgroundColor = 'rgba(0,127,127,0.75 )';
+
+          const symbol = document.createElement( 'div' );
+          symbol.className = 'symbol';
+          symbol.textContent = p.title;
+          
+          symbol.addEventListener( 'click', function () {
+
+            camera.position.set(4 * plane.position.x, 4 * plane.position.y, 4 * plane.position.z);
+            camera.lookAt(plane.position.x, plane.position.y, plane.position.z);
+
+          } );
+
+
+          element.appendChild( symbol );
+
+          bcontain.appendChild(element);
+
   group.add(plane);
   planes.push(plane);
 
-
 });
-
 
 let time = 0;
 function Render() {
   time++;
-  // group.rotation.x = time/100;
+
+  group.rotation.y =  time/1000;
+  group2.rotation.y = time/1000;
+
   planes.forEach(e => {
   	let conj = new THREE.Quaternion();
   	conj.copy(group.quaternion);
+    conj.copy(group2.quaternion);
   	conj.conjugate();
 
   	e.quaternion.multiplyQuaternions(
