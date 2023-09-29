@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 // import { OrbitControls } from '/jsm/controls/OrbitControls.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+// import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 
 
@@ -52,9 +52,9 @@ let group2 = new THREE.Group();
 
 scene.add(group);
 scene.add(group2);
-camera.position.set(0, 0, 100);
-camera.lookAt(10, 20, 30);
-var controls = new OrbitControls(camera, renderer.domElement);
+camera.position.set(70, 70, 70);
+camera.lookAt(0, 0, 0);
+// var controls = new OrbitControls(camera, renderer.domElement);
 
 var light = new THREE.AmbientLight( 0x404040,3 ); // soft white light
 scene.add( light );
@@ -117,9 +117,9 @@ const cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
 group.add(cloudMesh);
 
 // galaxy geometry
-const starGeometry = new THREE.SphereGeometry(300, 128, 128);
+const starGeometry = new THREE.SphereGeometry(200, 64, 64);
 
-const galaxyTexture = new THREE.TextureLoader().load('public/texture/galaxy.png')
+const galaxyTexture = new THREE.TextureLoader().load('public/texture/8k-sky.jpg')
 
 // galaxy material
 const starMaterial = new THREE.MeshBasicMaterial({
