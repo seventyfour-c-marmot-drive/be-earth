@@ -24,17 +24,26 @@ let points = [
   {
   	title: 'San Francisco',
   	lat: 37.773972,
-  	long: -122.43129
+  	long: -122.43129,
+    textTitle: '',
+    description: '',
+    link: ''
   },
   {
     title: 'Barcelona',
     lat: 41.390205,
-    long: 2.154007
+    long: 2.154007,
+    textTitle: '',
+    description: '',
+    link: ''
   },
   {
     title: 'Cape Town',
     lat: -33.918861,
-    long: 18.423300
+    long: 18.423300,
+    textTitle: '',
+    description: '',
+    link: ''
   }
 ]
 
@@ -144,7 +153,8 @@ group2.add( pointLight );
 let R = 25.5;
 let planes = [];
 let i = 0;
-let bcontain = document.getElementById('bcontainer');
+let lContain = document.getElementById('leftContainer');
+let rContain = document.getElementById('rightContainer');
 
 points.forEach(p => {
   i++;
@@ -171,13 +181,12 @@ points.forEach(p => {
   plane.position.z = pos[2];
 
 
-          const element = document.createElement( 'div' );
-          element.className = 'place';
-          element.style.backgroundColor = 'rgba(0,127,127,0.75 )';
+
 
           const symbol = document.createElement( 'div' );
           symbol.className = 'symbol';
           symbol.textContent = p.title;
+          symbol.style.backgroundColor = '#0b0b0b';
           
           symbol.addEventListener( 'click', function () {
 
@@ -190,10 +199,10 @@ points.forEach(p => {
 
           } );
 
+          lContain.appendChild(symbol);
+          //rContain.appendChild(element);
 
-          element.appendChild( symbol );
 
-          bcontain.appendChild(element);
 
   group.add(plane);
   planes.push(plane);
