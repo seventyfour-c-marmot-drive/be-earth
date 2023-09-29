@@ -181,8 +181,10 @@ points.forEach(p => {
           
           symbol.addEventListener( 'click', function () {
 
-            camera.position.set(4 * plane.position.x, 4 * plane.position.y, 4 * plane.position.z);
-            camera.lookAt(plane.position.x, plane.position.y, plane.position.z);
+            camera.position.set(4 * pos[0], 4 * pos[1], 4 * pos[2]);
+            camera.lookAt(pos[0], pos[1], pos[2]);
+            group.rotation.y = 0;
+            group2.rotation.y = 0;
             rotationStepE = 0;
             rotationStepG = 0.0004;
 
