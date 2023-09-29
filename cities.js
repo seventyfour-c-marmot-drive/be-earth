@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-// import { OrbitControls } from '/jsm/controls/OrbitControls.js';
 // import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 
@@ -22,28 +21,28 @@ let rotationStepE = 0.0004;
 
 let points = [
   {
-  	title: 'San Francisco',
-  	lat: 37.773972,
-  	long: -122.43129,
-    textTitle: '',
-    description: '',
-    link: ''
+  	title: 'Los Angeles',
+  	lat: 34.052235,
+  	long: -118.243683,
+    textTitle: 'Los Angeles, Amerikas förenta stater',
+    description: 'Los Angeles (ofta förkortat L.A., även kallad City of Angels, från sp. "Änglarna") är den största staden i delstaten Kalifornien och den näst största i USA. Los Angeles ligger i södra Kalifornien i sydvästra delen av USA och är huvudort i Los Angeles County. Los Angeles grundades av spanjorer den 4 september 1781 som El Pueblo de Nuestra Señora la Reina de los Ángeles del Río de Porciúncula – "Vår frus änglarnas drottnings stad vid floden Porciuncula". Platsen låg på mexikanskt område fram till 1846, då den kom att tillhöra USA.',
+    linkUp: 'https://sv.wikipedia.org/wiki/Los_Angeles'
   },
   {
-    title: 'Barcelona',
-    lat: 41.390205,
-    long: 2.154007,
-    textTitle: '',
-    description: '',
-    link: ''
+    title: 'Bilbao',
+    lat: 43.262985,
+    long: -2.935013,
+    textTitle: 'Bilbao, Spanien',
+    description: 'Bilbao (baskiska: Bilbo) är en kommun, spansk hamn- och industristad i provinsen Biscaya i Baskien, cirka 12 km innanför floden Nervións mynning i Biscayabukten. Med förstäder har Bilbao cirka en miljon invånare. Bilbao är en av Spaniens viktigaste industristäder med järn- och stålindustri. Hamnen är Spaniens näst största. År 1997 invigdes Guggenheimmuseet i Bilbao, ett nytt konstmuseum där själva byggnaden har en mycket intressant arkitektur signerad Frank Gehry.',
+    linkUp: 'https://sv.wikipedia.org/wiki/Bilbao'
   },
   {
-    title: 'Cape Town',
-    lat: -33.918861,
-    long: 18.423300,
-    textTitle: '',
-    description: '',
-    link: ''
+    title: 'Nairobi',
+    lat: -1.286389,
+    long: 36.817223,
+    textTitle: 'Nairobi, Kenya',
+    description: 'Nairobi är huvudstad i Kenya och har drygt 3 miljoner invånare. Staden ligger 1 700 meter över havet, på ena randen av det Östafrikanska gravsänkesystemet.[3] Inom stadsgränsen ligger viltreservatet Nairobi nationalpark. Nairobi grundades 1899 i samband med byggnationen av Ugandiska järnvägen från kuststaden Mombasa till Uganda. Nairobi blev 1907 huvudstad i Brittiska Östafrika och är sedan självständigheten 1963 huvudstad i Kenya.',
+    linkUp: 'https://sv.wikipedia.org/wiki/Nairobi'
   }
 ]
 
@@ -61,7 +60,7 @@ let group2 = new THREE.Group();
 
 scene.add(group);
 scene.add(group2);
-camera.position.set(70, 70, 70);
+camera.position.set(100, 100, 100);
 camera.lookAt(0, 0, 0);
 // var controls = new OrbitControls(camera, renderer.domElement);
 
@@ -161,8 +160,7 @@ points.forEach(p => {
   let pos = calcPosFromLatLonRad(p.lat,p.long,R);
   let geometry = new THREE.SphereGeometry( 0.4,16,16 );
   let material = new THREE.MeshBasicMaterial( {
-	  color: 0x00ff00,
-	  side: THREE.DoubleSide,
+    side: THREE.DoubleSide,
 	  // wireframe: true
   } );
   let material1 = new THREE.RawShaderMaterial( {
@@ -172,7 +170,7 @@ points.forEach(p => {
     },
     transparent: true,
     vertexShader: document.getElementById('vertexShader').textContent,
-	fragmentShader: document.getElementById('fragmentShader').textContent
+    fragmentShader: document.getElementById('fragmentShader').textContent
   } );
   let plane = new THREE.Mesh(geometry,material1);
 
@@ -197,11 +195,35 @@ points.forEach(p => {
             rotationStepE = 0;
             rotationStepG = 0.0004;
 
+            rContain.innerHTML='';
+            const info = document.createElement( 'div' );
+            info.className = 'informationBox';
+            info.style.backgroundColor = '#0b0b0b';
+
+            const info0 = document.createElement( 'div' );
+            info0.className = 'informationBoxTitle';
+            info0.textContent = p.textTitle;
+
+            const info1 = document.createElement( 'div' );
+            info1.className = 'informationBoxDescription';
+            info1.textContent = p.description;
+
+            const info2 = document.createElement( 'a' );
+            info2.className = 'informationBoxDescription';
+            info2.href = p.linkUp;
+            info2.textContent = p.linkUp;
+            info2.target="_blank";
+
+            info.appendChild(info0);
+            info.appendChild(info1);
+            info.appendChild(info2);
+
+            rContain.appendChild(info);
+
           } );
 
           lContain.appendChild(symbol);
-          //rContain.appendChild(element);
-
+          
 
 
   group.add(plane);
@@ -213,11 +235,9 @@ window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    render();
 }, false);
 
 function Render() {
-  
   group.rotation.y -= rotationStepE;
   group2.rotation.y -= rotationStepG;
 
