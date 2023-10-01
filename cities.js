@@ -12,8 +12,8 @@ let renderer = new THREE.WebGLRenderer({
   alpha: true
 });
 
-let rotationStepG = 0.0008;
-let rotationStepE = 0.0004;
+let rotationStepG = 0.0004;
+let rotationStepE = 0.0002;
 
 let points = [
   {
@@ -171,18 +171,24 @@ points.forEach(p => {
       event.target.classList.remove('activeInfo');
       rContain.innerHTML='';
 
-      rotationStepG = 0.0008;
-      rotationStepE = 0.0004;
+      rotationStepG = 0.0004;
+      rotationStepE = 0.0002;
 
       return;
     }
+
+    const divs = document.querySelectorAll('.activeInfo');
+
+    divs.forEach((element) => {
+      element.classList.remove('activeInfo');
+    });
 
     camera.position.set(4 * pos[0], 4 * pos[1], 4 * pos[2]);
     camera.lookAt(pos[0], pos[1], pos[2]);
     group.rotation.y = 0;
     group2.rotation.y = 0;
     rotationStepE = 0;
-    rotationStepG = 0.0004;
+    rotationStepG = 0.0002;
 
     rContain.innerHTML='';
     const info = document.createElement( 'div' );
