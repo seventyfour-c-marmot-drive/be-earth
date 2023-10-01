@@ -186,7 +186,17 @@ points.forEach(p => {
           symbol.textContent = p.title;
           symbol.style.backgroundColor = '#0b0b0b';
           
-          symbol.addEventListener( 'click', function () {
+          symbol.addEventListener( 'click', function(event) {
+
+            if ( event.target.classList.contains('activeInfo') ) {
+              event.target.classList.remove('activeInfo');
+              rContain.innerHTML='';
+
+              rotationStepG = 0.0008;
+              rotationStepE = 0.0004;
+
+              return;
+            }
 
             camera.position.set(4 * pos[0], 4 * pos[1], 4 * pos[2]);
             camera.lookAt(pos[0], pos[1], pos[2]);
@@ -220,7 +230,12 @@ points.forEach(p => {
 
             rContain.appendChild(info);
 
+            event.target.classList.add('activeInfo');
+
           } );
+
+         
+
 
           lContain.appendChild(symbol);
           
