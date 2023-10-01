@@ -2,8 +2,6 @@ import * as THREE from 'three';
 // import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 
-
-
 const canvas = document.querySelector('.webgl');
 let width = window.innerWidth;
 let height = window.innerHeight;
@@ -14,10 +12,8 @@ let renderer = new THREE.WebGLRenderer({
   alpha: true
 });
 
-
 let rotationStepG = 0.0008;
 let rotationStepE = 0.0004;
-
 
 let points = [
   {
@@ -50,13 +46,9 @@ renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
 renderer.setSize(width, height);
 var camera = new THREE.PerspectiveCamera(40, width / height, 1, 1000);
 
-
-// SCENE
 let scene = new THREE.Scene();
-
 let group = new THREE.Group();
 let group2 = new THREE.Group();
-
 
 scene.add(group);
 scene.add(group2);
@@ -69,7 +61,6 @@ scene.add( light );
 
 var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
 scene.add( directionalLight );
-
 
 function randn_bm() {
   var u = 0, v = 0;
@@ -87,13 +78,8 @@ function calcPosFromLatLonRad(lat,lon,radius) {
   let z = ((radius) * Math.sin(phi)*Math.sin(theta));
   let y = ((radius) * Math.cos(phi));
     
-    
-  console.log([x,y,z]);
   return [x,y,z];
 }
-
-
-// DO SOMETHING
 
 const earthTexture = new THREE.TextureLoader().load('public/texture/4kice.jpg' );
 const beBop = new THREE.TextureLoader().load('public/texture/4kbump.jpg' );
@@ -104,7 +90,6 @@ var material = new THREE.MeshPhongMaterial( {
   map: earthTexture,
   displacementMap: beBop,
   displacementScale: 0.5,
-  // wireframe: true
 } );
 var sphere = new THREE.Mesh( geometry, material );
 group.add( sphere );
@@ -114,7 +99,7 @@ const cloudGeometry = new THREE.SphereGeometry(25.05, 128, 128);
 
 const cloudTexture = new THREE.TextureLoader().load('public/texture/earthCloud.png');
 
-// cloud metarial
+// cloud material
 const cloudMaterial = new THREE.MeshPhongMaterial({
     map: cloudTexture,
     transparent: true,
@@ -147,8 +132,6 @@ const pointLight = new THREE.PointLight( 0xedd59e, 250000, 1000 );
 pointLight.position.set( 200, 200, 200 );
 group2.add( pointLight );
 
-
-
 let R = 25.5;
 let planes = [];
 let i = 0;
@@ -161,7 +144,6 @@ points.forEach(p => {
   let geometry = new THREE.SphereGeometry( 0.4,16,16 );
   let material = new THREE.MeshBasicMaterial( {
     side: THREE.DoubleSide,
-	  // wireframe: true
   } );
   let material1 = new THREE.RawShaderMaterial( {
     uniforms: {
@@ -178,69 +160,61 @@ points.forEach(p => {
   plane.position.y = pos[1];
   plane.position.z = pos[2];
 
+  const symbol = document.createElement( 'div' );
+  symbol.className = 'symbol';
+  symbol.textContent = p.title;
+  symbol.style.backgroundColor = '#0b0b0b';
+  
+  symbol.addEventListener( 'click', function(event) {
 
+    if ( event.target.classList.contains('activeInfo') ) {
+      event.target.classList.remove('activeInfo');
+      rContain.innerHTML='';
 
+      rotationStepG = 0.0008;
+      rotationStepE = 0.0004;
 
-          const symbol = document.createElement( 'div' );
-          symbol.className = 'symbol';
-          symbol.textContent = p.title;
-          symbol.style.backgroundColor = '#0b0b0b';
-          
-          symbol.addEventListener( 'click', function(event) {
+      return;
+    }
 
-            if ( event.target.classList.contains('activeInfo') ) {
-              event.target.classList.remove('activeInfo');
-              rContain.innerHTML='';
+    camera.position.set(4 * pos[0], 4 * pos[1], 4 * pos[2]);
+    camera.lookAt(pos[0], pos[1], pos[2]);
+    group.rotation.y = 0;
+    group2.rotation.y = 0;
+    rotationStepE = 0;
+    rotationStepG = 0.0004;
 
-              rotationStepG = 0.0008;
-              rotationStepE = 0.0004;
+    rContain.innerHTML='';
+    const info = document.createElement( 'div' );
+    info.className = 'informationBox';
+    info.style.backgroundColor = '#0b0b0b';
 
-              return;
-            }
+    const info0 = document.createElement( 'div' );
+    info0.className = 'informationBoxTitle';
+    info0.textContent = p.textTitle;
 
-            camera.position.set(4 * pos[0], 4 * pos[1], 4 * pos[2]);
-            camera.lookAt(pos[0], pos[1], pos[2]);
-            group.rotation.y = 0;
-            group2.rotation.y = 0;
-            rotationStepE = 0;
-            rotationStepG = 0.0004;
+    const info1 = document.createElement( 'div' );
+    info1.className = 'informationBoxDescription';
+    info1.textContent = p.description;
 
-            rContain.innerHTML='';
-            const info = document.createElement( 'div' );
-            info.className = 'informationBox';
-            info.style.backgroundColor = '#0b0b0b';
+    const info2 = document.createElement( 'a' );
+    info2.className = 'informationBoxDescription';
+    info2.href = p.linkUp;
+    info2.textContent = p.linkUp;
+    info2.target="_blank";
 
-            const info0 = document.createElement( 'div' );
-            info0.className = 'informationBoxTitle';
-            info0.textContent = p.textTitle;
+    info.appendChild(info0);
+    info.appendChild(info1);
+    info.appendChild(info2);
 
-            const info1 = document.createElement( 'div' );
-            info1.className = 'informationBoxDescription';
-            info1.textContent = p.description;
+    rContain.appendChild(info);
 
-            const info2 = document.createElement( 'a' );
-            info2.className = 'informationBoxDescription';
-            info2.href = p.linkUp;
-            info2.textContent = p.linkUp;
-            info2.target="_blank";
+    event.target.classList.add('activeInfo');
 
-            info.appendChild(info0);
-            info.appendChild(info1);
-            info.appendChild(info2);
+  } );
 
-            rContain.appendChild(info);
-
-            event.target.classList.add('activeInfo');
-
-          } );
-
-         
-
-
-          lContain.appendChild(symbol);
-          
-
-
+  lContain.appendChild(symbol);
+  
   group.add(plane);
   planes.push(plane);
 
@@ -266,10 +240,9 @@ function Render() {
   		conj,
   		camera.quaternion
   	);
-
-  	// e.quaternion.copy(camera.quaternion);
   });
   renderer.render(scene, camera);
   window.requestAnimationFrame(Render);
 }
+
 Render();
