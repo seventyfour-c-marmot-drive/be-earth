@@ -56,7 +56,7 @@ let scene = new THREE.Scene();
 let group = new THREE.Group();
 let group2 = new THREE.Group();
 
-camera.position.set(100, 100, 100);
+camera.position.set(49, 49, 49);
 camera.lookAt(0, 0, 0);
 // var controls = new OrbitControls(camera, renderer.domElement);
 
@@ -230,7 +230,7 @@ points.forEach(p => {
     if ( event.target.classList.contains('activeInfo') ) {
       event.target.classList.remove('activeInfo');
       rContain.innerHTML='';
-
+      camera.position.setLength(84.87)
       rotationStepG = 0.0004;
       rotationStepE = 0.0002;
 
