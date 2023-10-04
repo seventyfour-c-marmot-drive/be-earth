@@ -12,6 +12,12 @@ let renderer = new THREE.WebGLRenderer({
   alpha: true
 });
 
+
+let globalUniforms = {
+  time: { value: 0 }
+};
+
+
 let rotationStepG = 0.0004;
 let rotationStepE = 0.0002;
 
@@ -138,27 +144,83 @@ let i = 0;
 let lContain = document.getElementById('leftContainer');
 let rContain = document.getElementById('rightContainer');
 
+
+const markerCount = points.length + 1;
+
+let gMarker = new THREE.PlaneGeometry();
+let mMarker = new THREE.MeshBasicMaterial({
+  color: 0xffca07,
+  onBeforeCompile: (shader) => {
+    shader.uniforms.time = globalUniforms.time;
+    shader.vertexShader = `
+      attribute float phase;
+      varying float vPhase;
+      ${shader.vertexShader}
+    `.replace(
+      `#include <begin_vertex>`,
+      `#include <begin_vertex>
+        vPhase = phase; // de-synch of ripples
+      `
+    );
+    //console.log(shader.vertexShader);
+    shader.fragmentShader = `
+      uniform float time;
+      varying float vPhase;
+      ${shader.fragmentShader}
+    `.replace(
+      `vec4 diffuseColor = vec4( diffuse, opacity );`,
+      `
+      vec2 lUv = (vUv - 0.5) * 2.;
+      float val = 0.;
+      float lenUv = length(lUv);
+      val = max(val, 1. - step(0.25, lenUv)); // central circle
+      val = max(val, step(0.4, lenUv) - step(0.5, lenUv)); // outer circle
+      
+      float tShift = fract(time * 0.5 + vPhase);
+      val = max(val, step(0.4 + (tShift * 0.6), lenUv) - step(0.5 + (tShift * 0.5), lenUv)); // ripple
+      
+      if (val < 0.5) discard;
+      
+      vec4 diffuseColor = vec4( diffuse, opacity );`
+    );
+    //console.log(shader.fragmentShader)
+  }
+});
+mMarker.defines = { USE_UV: " " }; // needed to be set to be able to work with UVs
+let markers = new THREE.InstancedMesh(gMarker, mMarker, markerCount);
+
+let phase = [];
+let dummy = new THREE.Object3D();
+
 points.forEach(p => {
   i++;
   let pos = calcPosFromLatLonRad(p.lat,p.long,R);
-  let geometry = new THREE.SphereGeometry( 0.4,16,16 );
-  let material = new THREE.MeshBasicMaterial( {
-    side: THREE.DoubleSide,
-  } );
-  let material1 = new THREE.RawShaderMaterial( {
-    uniforms: {
-      time: {value: 0},
-      hover: {value: 0}
-    },
-    transparent: true,
-    vertexShader: document.getElementById('vertexShader').textContent,
-    fragmentShader: document.getElementById('fragmentShader').textContent
-  } );
-  let plane = new THREE.Mesh(geometry,material1);
+//  let geometry = new THREE.SphereGeometry( 0.4,16,16 );
+//  let material = new THREE.MeshBasicMaterial( {
+//    side: THREE.DoubleSide,
+//  } );
+//  let material1 = new THREE.RawShaderMaterial( {
+//    uniforms: {
+//      time: {value: 0},
+//      hover: {value: 0}
+//    },
+//    transparent: true,
+//    vertexShader: document.getElementById('vertexShader').textContent,
+//    fragmentShader: document.getElementById('fragmentShader').textContent
+//  } );
+// <Markers>
 
-  plane.position.x = pos[0];
-  plane.position.y = pos[1];
-  plane.position.z = pos[2];
+
+  dummy.position.x = pos[0];
+  dummy.position.y = pos[1];
+  dummy.position.z = pos[2];
+  
+
+  dummy.position.setLength(R + 1.6);
+  dummy.lookAt(dummy.position.clone().setLength(R + 2.5));
+  dummy.updateMatrix();
+  markers.setMatrixAt(i, dummy.matrix);
+  phase.push(Math.random());
 
   const symbol = document.createElement( 'div' );
   symbol.className = 'symbol';
@@ -219,12 +281,23 @@ points.forEach(p => {
 
   } );
 
+
+  // scene.add(markers);
+
+
   lContain.appendChild(symbol);
   
-  group.add(plane);
-  planes.push(plane);
+ 
 
 });
+
+gMarker.setAttribute(
+ "phase",
+ new THREE.InstancedBufferAttribute(new Float32Array(phase), 1)
+);
+
+group.add(markers);
+planes.push(markers);
 
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -236,17 +309,17 @@ function Render() {
   group.rotation.y -= rotationStepE;
   group2.rotation.y -= rotationStepG;
 
-  planes.forEach(e => {
-  	let conj = new THREE.Quaternion();
-  	conj.copy(group.quaternion);
-    conj.copy(group2.quaternion);
-  	conj.conjugate();
-
-  	e.quaternion.multiplyQuaternions(
-  		conj,
-  		camera.quaternion
-  	);
-  });
+//  markers.forEach(e => {
+//  	let conj = new THREE.Quaternion();
+//  	conj.copy(group.quaternion);
+//    conj.copy(group2.quaternion);
+//  	conj.conjugate();
+//
+//  	e.quaternion.multiplyQuaternions(
+//  		conj,
+//  		camera.quaternion
+//  	);
+//  });
   renderer.render(scene, camera);
   window.requestAnimationFrame(Render);
 }
