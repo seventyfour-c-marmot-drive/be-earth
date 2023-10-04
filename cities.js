@@ -56,8 +56,6 @@ let scene = new THREE.Scene();
 let group = new THREE.Group();
 let group2 = new THREE.Group();
 
-scene.add(group);
-scene.add(group2);
 camera.position.set(100, 100, 100);
 camera.lookAt(0, 0, 0);
 // var controls = new OrbitControls(camera, renderer.domElement);
@@ -216,8 +214,8 @@ points.forEach(p => {
   dummy.position.z = pos[2];
   
 
-  dummy.position.setLength(R + 1.6);
-  dummy.lookAt(dummy.position.clone().setLength(R + 2.5));
+  dummy.position.setLength(R + 0.1);
+  dummy.lookAt(dummy.position.clone().setLength(R + 1));
   dummy.updateMatrix();
   markers.setMatrixAt(i, dummy.matrix);
   phase.push(Math.random());
@@ -281,13 +279,7 @@ points.forEach(p => {
 
   } );
 
-
-  // scene.add(markers);
-
-
   lContain.appendChild(symbol);
-  
- 
 
 });
 
@@ -299,13 +291,21 @@ gMarker.setAttribute(
 group.add(markers);
 planes.push(markers);
 
+scene.add(group);
+scene.add(group2);
+
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 }, false);
 
+let clock = new THREE.Clock();
+
 function Render() {
+  let t = clock.getElapsedTime();
+  globalUniforms.time.value = t;
+
   group.rotation.y -= rotationStepE;
   group2.rotation.y -= rotationStepG;
 
