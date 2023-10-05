@@ -60,11 +60,8 @@ camera.position.set(49, 49, 49);
 camera.lookAt(0, 0, 0);
 // var controls = new OrbitControls(camera, renderer.domElement);
 
-var light = new THREE.AmbientLight( 0x404040,3 ); // soft white light
+var light = new THREE.AmbientLight( 0x303030,3 ); // soft white light
 scene.add( light );
-
-var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
-scene.add( directionalLight );
 
 function randn_bm() {
   var u = 0, v = 0;
@@ -129,11 +126,11 @@ const starMesh = new THREE.Mesh(starGeometry, starMaterial);
 group2.add(starMesh);
 
 // ambient light
-const ambientlight = new THREE.AmbientLight(0xedd59e, 0.15);
+const ambientlight = new THREE.AmbientLight(0xfde5be, 0.15);
 group2.add(ambientlight);
 
-const pointLight = new THREE.PointLight( 0xedd59e, 250000, 1000 );
-pointLight.position.set( 200, 200, 200 );
+const pointLight = new THREE.PointLight( 0xfde5be, 220000, 1000 );
+pointLight.position.set( 120, 70, 200 );
 group2.add( pointLight );
 
 let R = 25.5;
