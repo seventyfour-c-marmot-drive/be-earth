@@ -116,7 +116,7 @@ group.add(cloudMesh);
 // galaxy geometry
 const starGeometry = new THREE.SphereGeometry(200, 64, 64);
 
-const galaxyTexture = new THREE.TextureLoader().load('public/texture/8k-sky.jpg')
+const galaxyTexture = new THREE.TextureLoader().load('public/texture/8k_stars.jpg')
 
 // galaxy material
 const starMaterial = new THREE.MeshBasicMaterial({
